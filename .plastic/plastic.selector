@@ -1,0 +1,4 @@
+repository "AIUEOWorld/AIUEOWorld@15668447924505@cloud"
+  path "/"
+    br "/main"
+    co "/main"

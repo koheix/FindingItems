@@ -1,0 +1,29 @@
+{
+    "NaviBehavior": {
+        "checkpoints": [
+            {
+                "steps": 84942,
+                "file_path": "results\\test_run\\NaviBehavior\\NaviBehavior-84942.onnx",
+                "reward": 0.0,
+                "creation_time": 1769684844.1078844,
+                "auxillary_file_paths": [
+                    "results\\test_run\\NaviBehavior\\NaviBehavior-84942.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 84942,
+            "file_path": "results\\test_run\\NaviBehavior.onnx",
+            "reward": 0.0,
+            "creation_time": 1769684844.1078844,
+            "auxillary_file_paths": [
+                "results\\test_run\\NaviBehavior\\NaviBehavior-84942.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.2.2+cu121"
+    }
+}

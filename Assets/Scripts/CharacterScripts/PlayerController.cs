@@ -29,7 +29,8 @@ public class PlayerController : MonoBehaviour
     // ─── Jump & Gravity ──────────────────────────────────
     [Header("Jump & Gravity")]
     [Tooltip("ジャンプの高さ")]
-    public float JumpHeight = 1.2f;
+    public float JumpHeight = 1.0f;
+    private float DefaultJumpHeight = 1.0f;
 
     [Tooltip("カスタム重力値 (デフォルト: -9.81f)")]
     public float Gravity = -9.81f;
@@ -379,4 +380,45 @@ public class PlayerController : MonoBehaviour
             GroundedRadius
         );
     }
+
+    // 収集アイテムとの衝突判定
+    private void OnTriggerEnter(Collider other)
+    {
+        CollectibleItem collectible = other.GetComponent<CollectibleItem>();
+        if(collectible != null)
+        {
+            collectible.OnCollect(gameObject);
+        }
+    }
+
+// 非同期処理で5秒間ジャンプ力を増加させる
+    public void IncreaseJumpPower(float jumpPower)
+    {
+        JumpHeight = jumpPower;
+        Debug.Log("ジャンプ力が" + jumpPower + "になった。");
+        // 5秒後に元のジャンプ力に戻す
+        Invoke("ResetJumpPower", 5f);
+
+    }
+
+    private void ResetJumpPower()
+    {
+        JumpHeight = DefaultJumpHeight;
+        Debug.Log("ジャンプ力が元に戻った。");
+    }
+
+    // ダメージオブジェクトとの衝突判定
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        DamageBlock damageBlock = hit.gameObject.GetComponent<DamageBlock>();
+        if(damageBlock != null)
+        {
+            PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damageBlock.DamageAmount);
+            }
+        }
+    }
+    
 }

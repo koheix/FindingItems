@@ -10,6 +10,13 @@ public class PlayerHealth : MonoBehaviour
     // getter setter付きのプロパティ
     public int health {get; private set;}
     // [SerializeField]private int health = MAX_HEALTH;
+
+    // 無敵時間
+    private float invincibleTime = 1.0f; // 無敵時間（秒）
+    private float lastDamageTime = -10.0f; // 最後にダメージを受けた時間
+
+    // 無敵状態かどうかを返すメソッド
+    public bool IsInvincible => (Time.time - lastDamageTime) < invincibleTime;
     
 
     // 体力変更時のイベント
@@ -25,7 +32,12 @@ public class PlayerHealth : MonoBehaviour
     // ダメージを受けるメソッド
     public void TakeDamage(int damage)
     {
+        if (IsInvincible)
+            return; // 無敵状態ならダメージを受けない
+
         health -= damage;
+        lastDamageTime = Time.time; // ダメージを受けた時間を更新
+        // 体力が0以下になった場合の処理
         if (health <= 0)
         {
             // Die();

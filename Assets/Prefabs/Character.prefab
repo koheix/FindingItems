@@ -137,6 +137,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bf145e300bf53184498c72c9cd5b0e42, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7562701637763284305}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bf145e300bf53184498c72c9cd5b0e42, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1204421198203488840}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bf145e300bf53184498c72c9cd5b0e42, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6317033263279904527}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bf145e300bf53184498c72c9cd5b0e42, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5845952252323654417}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bf145e300bf53184498c72c9cd5b0e42, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2340124659984229090}
   m_SourcePrefab: {fileID: 100100000, guid: bf145e300bf53184498c72c9cd5b0e42, type: 3}
 --- !u!1 &8352044182081001603 stripped
 GameObject:
@@ -304,6 +316,58 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1204421198203488840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8352044182081001603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42944d6dd2ea5a43b889b964272c1e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerVisualEffect
+--- !u!114 &6317033263279904527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8352044182081001603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d1dcc8cafa3ca4b9a05b6cfe875676, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFallChecker
+  fallThreshold: -10
+--- !u!114 &5845952252323654417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8352044182081001603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b10d223c2d2b74580c8d097a1bdec7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+--- !u!114 &2340124659984229090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8352044182081001603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deea1e0d6102a83408ee034203874df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerKnockback
+  knockbackForce: 5
+  knockbackUpwardForce: 2
+  knockbackDuration: 1
 --- !u!4 &8692997598568383033 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bf145e300bf53184498c72c9cd5b0e42, type: 3}

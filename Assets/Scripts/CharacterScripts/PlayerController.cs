@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// サードパーソン視点のプレイヤー移動・カメラ制御
@@ -25,6 +26,13 @@ public class PlayerController : MonoBehaviour
     [Tooltip("キャラクターの回転スムース時間")]
     [Range(0.0f, 0.3f)]
     public float RotationSmoothTime = 0.12f;
+
+    // タッチのジョイスティック
+    [Tooltip("タッチ操作用のジョイスティック")]
+    public VariableJoystick joystick;
+
+    [Tooltip("タッチ操作用の視点移動ゾーン")]
+    public TouchLookZone lookZone;
 
     // ─── Jump & Gravity ──────────────────────────────────
     [Header("Jump & Gravity")]
@@ -78,6 +86,9 @@ public class PlayerController : MonoBehaviour
     private GameObject _mainCamera;
     private bool _hasAnimator;
 
+    // 被ダメージ時のノックバックのクラス
+    private PlayerKnockback _knockback;
+
     // Input 値（イベントから書き込み、Update で読み取る）
     private Vector2 _moveInput;
     private Vector2 _lookInput;
@@ -121,6 +132,7 @@ public class PlayerController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _playerInput = GetComponent<PlayerInput>();
         _hasAnimator = TryGetComponent(out _animator);
+        _knockback = GetComponent<PlayerKnockback>();
 
         // Input System イベント登録
         _playerInput.actions["Move"].performed   += OnMove;
@@ -150,8 +162,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
+        // 地面に接地しているかのチェック
         GroundedCheck();
+        // ジャンプと重力の処理
         JumpAndGravity();
+        // プレイヤーの移動処理
         Move();
     }
 
@@ -167,11 +183,36 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         _moveInput = context.ReadValue<Vector2>();
+        Debug.Log($"Move: {_moveInput}, Device: {context.control?.device?.displayName}");
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        _lookInput = context.ReadValue<Vector2>();
+        // // // タッチ入力の場合のみチェックを行う
+        // // if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+        // // {
+        // //     Vector2 touchPosition = Touchscreen.current.primaryTouch.position.ReadValue();
+
+        // //     // 画面の左半分（Screen.width / 2 以下）なら処理を中断
+        // //     if (touchPosition.x < Screen.width / 2f)
+        // //     {
+        // //         return;
+        // //     }
+        // // }
+
+        // _lookInput = context.ReadValue<Vector2>();
+        // マウス/ゲームパッドの入力はそのまま通す
+        if (context.control.device is not Touchscreen)
+        {
+            _lookInput = context.ReadValue<Vector2>();
+            return;
+        }
+
+        // タッチ入力の場合は、LookZoneの結果を採用する
+        if (lookZone != null)
+        {
+            _lookInput = lookZone.TouchDelta;
+        }
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -209,9 +250,23 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+
+        // ノックバック中は移動入力を無視
+        if (_knockback != null && _knockback.IsKnockedBack)
+        {
+            return;
+        }
+
         // イベントから書き込まれた入力値を読む
         Vector2 moveInput = _moveInput;
         bool    sprint    = _sprintPressed;
+
+        // もしジョイスティックが動いていたら、その値を優先
+        // joystick.Direction は Vector2(-1~1, -1~1) を返す
+        if (joystick != null && joystick.Direction != Vector2.zero)
+        {
+            moveInput = joystick.Direction;
+        }
 
         // ターゲット速度の決定
         float targetSpeed = sprint ? SprintSpeed : MoveSpeed;
@@ -358,6 +413,7 @@ public class PlayerController : MonoBehaviour
         );
     }
 
+
     // ─── Utility ─────────────────────────────────────────
 
     private static float ClampAngle(float angle, float min, float max)
@@ -408,6 +464,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // ダメージオブジェクトとの衝突判定
+    // のちに敵キャラとの衝突判定もここで行う予定
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         DamageBlock damageBlock = hit.gameObject.GetComponent<DamageBlock>();
@@ -417,8 +474,21 @@ public class PlayerController : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damageBlock.DamageAmount);
+
+                // ノックバックの適用
+                PlayerKnockback knockback = GetComponent<PlayerKnockback>();
+                if (knockback != null)                {
+                    Vector3 knockbackDirection = (transform.position - hit.transform.position).normalized;
+                    knockback.ApplyKnockback(knockbackDirection);
+                }
             }
         }
+    }
+
+    // UIボタンからジャンプを呼び出すためのパブリックメソッド
+    public void JumpButtonPressed()
+    {
+        _jumpPressed = true;
     }
     
 }

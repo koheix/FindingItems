@@ -17,8 +17,10 @@ public class PlayerFallChecker : MonoBehaviour
 
     void GameOver()
     {
-        // 現在のシーンの名前を取得して、最初から読み込み直す
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentSceneName);
+        // // 現在のシーンの名前を取得して、最初から読み込み直す
+        // string currentSceneName = SceneManager.GetActiveScene().name;
+        // SceneManager.LoadScene(currentSceneName);
+        GameData.previousSceneName = SceneManager.GetActiveScene().name; // どのシーンから来たのかを保存
+        SceneManager.LoadScene("GameOverScene"); // ゲームオーバーシーンに切り替える
     }
 }

@@ -339,6 +339,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42844a4fccbd54746b90cade4ff70f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &943327094 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7513606509011845435, guid: 79c27406634dc874394b4988316a63a0, type: 3}
+  m_PrefabInstance: {fileID: 616153662640349906}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1057289993 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8196233791091000781, guid: 5612d3586d4f3d54a962a41bbdd42d2b, type: 3}
@@ -817,6 +822,16 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5573260618248384964, guid: 48f0de7d6c58fa54a86270148c5c23d4, type: 3}
   m_PrefabInstance: {fileID: 4290424062924235922}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1921090056 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2912292716141131683, guid: 79c27406634dc874394b4988316a63a0, type: 3}
+  m_PrefabInstance: {fileID: 616153662640349906}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1995885533 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3101552899866698603, guid: 79c27406634dc874394b4988316a63a0, type: 3}
+  m_PrefabInstance: {fileID: 616153662640349906}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2046441239 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8582802030144259591, guid: 49c7d5a2d33888248a56d14ddbeb234b, type: 3}
@@ -1107,6 +1122,22 @@ PrefabInstance:
       propertyPath: playerHealth
       value: 
       objectReference: {fileID: 2078058553}
+    - target: {fileID: 9055628986646063421, guid: 79c27406634dc874394b4988316a63a0, type: 3}
+      propertyPath: heartIcons.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9055628986646063421, guid: 79c27406634dc874394b4988316a63a0, type: 3}
+      propertyPath: 'heartIcons.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1921090056}
+    - target: {fileID: 9055628986646063421, guid: 79c27406634dc874394b4988316a63a0, type: 3}
+      propertyPath: 'heartIcons.Array.data[1]'
+      value: 
+      objectReference: {fileID: 943327094}
+    - target: {fileID: 9055628986646063421, guid: 79c27406634dc874394b4988316a63a0, type: 3}
+      propertyPath: 'heartIcons.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1995885533}
     - target: {fileID: 9075148712320069015, guid: 79c27406634dc874394b4988316a63a0, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1133,15 +1164,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7636647353484806685, guid: 08a17769e3f00ae458375b5cf6c3f16a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.03
+      value: -0.89
       objectReference: {fileID: 0}
     - target: {fileID: 7636647353484806685, guid: 08a17769e3f00ae458375b5cf6c3f16a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.08
+      value: 4.54
       objectReference: {fileID: 0}
     - target: {fileID: 7636647353484806685, guid: 08a17769e3f00ae458375b5cf6c3f16a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.79
+      value: -4.638
       objectReference: {fileID: 0}
     - target: {fileID: 7636647353484806685, guid: 08a17769e3f00ae458375b5cf6c3f16a, type: 3}
       propertyPath: m_LocalRotation.w

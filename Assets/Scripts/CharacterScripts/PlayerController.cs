@@ -160,6 +160,26 @@ public class PlayerController : MonoBehaviour
         _fallTimeoutDelta = FallTimeout;
     }
 
+    private void Enable()
+    {
+        // シーンが切り替わったときに入力イベントが残っている可能性があるため、再度登録
+        _playerInput.actions["Move"].performed   += OnMove;
+        _playerInput.actions["Move"].canceled    += OnMove;
+        _playerInput.actions["Look"].performed   += OnLook;
+        _playerInput.actions["Look"].canceled    += OnLook;
+        _playerInput.actions["Jump"].started     += OnJump;
+        _playerInput.actions["Sprint"].started   += OnSprint;
+        _playerInput.actions["Sprint"].canceled  += OnSprint;
+
+        // カーソルを非表示にして中央に固定
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        // カメラターゲットの初期回転を取得
+        _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+        
+    }
+
     private void Update()
     {
 

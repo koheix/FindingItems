@@ -40,6 +40,8 @@ public class PlayerHealth : MonoBehaviour
         // 体力が0以下になった場合の処理
         if (health <= 0)
         {
+            Debug.Log("Player has died.");
+            GameMaster.Death(); // 死亡処理を呼び出す
             // Die();
             // Dieメソッドは別のスクリプトで実装予定
         }

@@ -11,16 +11,16 @@ public class PlayerFallChecker : MonoBehaviour
         // プレイヤーのY座標がしきい値を下回ったかチェック
         if (transform.position.y < fallThreshold)
         {
-            GameOver();
+            GameMaster.GameOver(); // ゲームオーバー処理を呼び出す
         }
     }
 
-    void GameOver()
-    {
-        // // 現在のシーンの名前を取得して、最初から読み込み直す
-        // string currentSceneName = SceneManager.GetActiveScene().name;
-        // SceneManager.LoadScene(currentSceneName);
-        GameData.previousSceneName = SceneManager.GetActiveScene().name; // どのシーンから来たのかを保存
-        SceneManager.LoadScene("GameOverScene"); // ゲームオーバーシーンに切り替える
-    }
+    // void GameOver()
+    // {
+    //     // // 現在のシーンの名前を取得して、最初から読み込み直す
+    //     // string currentSceneName = SceneManager.GetActiveScene().name;
+    //     // SceneManager.LoadScene(currentSceneName);
+    //     GameData.previousSceneName = SceneManager.GetActiveScene().name; // どのシーンから来たのかを保存
+    //     SceneManager.LoadScene("GameOverScene"); // ゲームオーバーシーンに切り替える
+    // }
 }

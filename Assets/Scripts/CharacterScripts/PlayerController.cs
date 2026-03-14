@@ -180,6 +180,22 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private void OnDisable()
+    {
+        // 入力イベントの登録解除
+        _playerInput.actions["Move"].performed   -= OnMove;
+        _playerInput.actions["Move"].canceled    -= OnMove;
+        _playerInput.actions["Look"].performed   -= OnLook;
+        _playerInput.actions["Look"].canceled    -= OnLook;
+        _playerInput.actions["Jump"].started     -= OnJump;
+        _playerInput.actions["Sprint"].started   -= OnSprint;
+        _playerInput.actions["Sprint"].canceled  -= OnSprint;
+
+        // カーソルを表示してロック解除
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     private void Update()
     {
 

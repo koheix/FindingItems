@@ -5,7 +5,7 @@ public class HealthUI : MonoBehaviour
 {
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private GameObject[] heartIcons; // ハートアイコンの配列
-    [SerializeField] private TextMeshProUGUI healthText;
+    // [SerializeField] private TextMeshProUGUI healthText;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -31,9 +31,9 @@ public class HealthUI : MonoBehaviour
                 heartIcons[i].SetActive(i < current);
             }
         }
-        // 体力テキストの更新
-        if (healthText != null)
-            healthText.text = $"{current}/{max}";
+        // // 体力テキストの更新
+        // if (healthText != null)
+        //     healthText.text = $"{current}/{max}";
     }
     // // Update is called once per frame
     // void Update()

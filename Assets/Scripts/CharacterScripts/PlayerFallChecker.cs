@@ -11,7 +11,7 @@ public class PlayerFallChecker : MonoBehaviour
         // プレイヤーのY座標がしきい値を下回ったかチェック
         if (transform.position.y < fallThreshold)
         {
-            GameMaster.GameOver(); // ゲームオーバー処理を呼び出す
+            GameMaster.Death(); // ゲームオーバー処理を呼び出す
         }
     }
 

@@ -141,7 +141,7 @@ public class PlayFabManager : MonoBehaviour
                     CurrentSaveData = data; // ロードしたデータを保存
                     Debug.Log("データロード成功");
 
-                    Debug.Log("wholeLife: " + data.wholeLife);
+                    Debug.Log("remainingLives: " + data.remainingLives);
                     onComplete?.Invoke(); // コールバック
                 }
                 else

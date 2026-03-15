@@ -44,13 +44,13 @@ public class GameMaster : MonoBehaviour
             return; // すでにdeath処理が行われている場合は何もしない
         isDying = true;
 
-        PlayFabManager.CurrentSaveData.wholeLife--; // 残機を1減らす
+        PlayFabManager.CurrentSaveData.remainingLives--; // 残機を1減らす
         // 残基がある場合はリスポーン、ない場合はゲームオーバー
-        if(PlayFabManager.CurrentSaveData.wholeLife > 0)
+        if(PlayFabManager.CurrentSaveData.remainingLives > 0)
         {
             PlayFabManager.Instance.SaveGameData(PlayFabManager.CurrentSaveData); // セーブデータを更新
             // リスポーン処理をここに実装（例：プレイヤーの位置を初期位置に戻すなど）
-            Debug.Log("Player has died. Remaining lives: " + PlayFabManager.CurrentSaveData.wholeLife);
+            Debug.Log("Player has died. Remaining lives: " + PlayFabManager.CurrentSaveData.remainingLives);
             SceneManager.LoadScene("DeathScene"); // 死亡シーンに切り替える
         }
         else
@@ -73,6 +73,7 @@ public class GameMaster : MonoBehaviour
         // 次のステージが存在するかチェック
         if (nextIndex < stageNames.Length)
         {
+            PlayFabManager.CurrentSaveData.previousStageName = PlayFabManager.CurrentSaveData.nowStageName; // 今のステージを前のステージとして保存
             PlayFabManager.CurrentSaveData.nowStageName = stageNames[nextIndex]; // 次のステージに進む
             PlayFabManager.Instance.SaveGameData(PlayFabManager.CurrentSaveData); // セーブデータを更新
             SceneManager.LoadScene("ClearScene"); // クリアシーンに切り替える

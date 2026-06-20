@@ -73,3 +73,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # *.asset
+Assets/TextMesh Pro/Resources/Fonts & Materials/NotoSansJP-Regular SDF.asset
+Assets/TextMesh Pro/Resources/Fonts & Materials/NotoSansJP-Regular SDF.asset.meta

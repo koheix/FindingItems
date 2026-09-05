@@ -497,6 +497,77 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2904515261083389829, guid: e604696694441d64b8577272410e76b1, type: 3}
   m_PrefabInstance: {fileID: 7091372595462594}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1401053712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1401053714}
+  - component: {fileID: 1401053713}
+  m_Layer: 0
+  m_Name: TutorialManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1401053713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401053712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1de393955c82e9e47b147ca82d4941c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialManager
+  playerHealth: {fileID: 2078058553}
+  fontAsset: {fileID: 11400000, guid: 169571b021f640f49951fb9bf7d0b79b, type: 2}
+  steps:
+  - message: "\u3053\u306E\u30B9\u30C6\u30FC\u30B8\u306F\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3067\u3059\u3002\n\u307E\u305A\u306F\u30C8\u30B2\u306E\u3042\u308B\u30C0\u30E1\u30FC\u30B8\u30D6\u30ED\u30C3\u30AF\u306B\u308F\u3056\u3068\u5F53\u305F\u3063\u3066\u307F\u3088\u3046\u3002"
+    waitFor: 1
+    itemName: 
+  - message: "\u30C0\u30E1\u30FC\u30B8\u30D6\u30ED\u30C3\u30AF\u306B\u5F53\u305F\u308B\u3068\u30E9\u30A4\u30D5\u304C1\u3064\u6E1B\u308A\u307E\u3059\u3002\n\u30E9\u30A4\u30D5\u304C0\u306B\u306A\u308B\u3068\u30B2\u30FC\u30E0\u30AA\u30FC\u30D0\u30FC\u3067\u3059\u3002"
+    waitFor: 0
+    itemName: 
+  - message: "\u6E1B\u3063\u305F\u30E9\u30A4\u30D5\u306F\u56DE\u5FA9\u3067\u304D\u307E\u3059\u3002\n\u30CF\u30FC\u30C8\u306E\u30A2\u30A4\u30C6\u30E0\u3092\u53D6\u308A\u306B\u884C\u3053\u3046\u3002"
+    waitFor: 2
+    itemName: Heal Heart
+  - message: "\u30CF\u30FC\u30C8\u3092\u53D6\u308B\u3068\u30E9\u30A4\u30D5\u304C\u56DE\u5FA9\u3057\u307E\u3057\u305F\u3002\n\u30C0\u30E1\u30FC\u30B8\u3092\u53D7\u3051\u305F\u3089\u63A2\u3057\u3066\u307F\u307E\u3057\u3087\u3046\u3002"
+    waitFor: 0
+    itemName: 
+  - message: "\u6B21\u306F\u30B8\u30E3\u30F3\u30D7\u306E\u30A2\u30A4\u30C6\u30E0\u3067\u3059\u3002\n\u5149\u3063\u3066\u3044\u308B\u30B8\u30E5\u30A8\u30EB\u3092\u53D6\u308A\u306B\u884C\u3053\u3046\u3002"
+    waitFor: 2
+    itemName: Jump Up Jewel
+  - message: "\u30B8\u30E5\u30A8\u30EB\u3092\u53D6\u308B\u3068\u3001\u3057\u3070\u3089\u304F\u30B8\u30E3\u30F3\u30D7\u529B\u304C\u4E0A\u304C\u308A\u307E\u3059\u3002\n\u9AD8\u3044\u8DB3\u5834\u306F\u3053\u308C\u3092\u4F7F\u3063\u3066\u8D8A\u3048\u307E\u3057\u3087\u3046\u3002"
+    waitFor: 0
+    itemName: 
+  - message: "\u6700\u5F8C\u306B\u9375\u3092\u53D6\u308B\u3068\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2\u3067\u3059\u3002\n\u30B4\u30FC\u30EB\u3092\u76EE\u6307\u3057\u3066\u304C\u3093\u3070\u3063\u3066\u304F\u3060\u3055\u3044\uFF01"
+    waitFor: 0
+    itemName: 
+  sortingOrder: 100
+  pauseWhileShowing: 1
+  okButtonLabel: OK
+--- !u!4 &1401053714
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1401053712}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1405898449 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2904515261083389829, guid: e604696694441d64b8577272410e76b1, type: 3}
@@ -1929,3 +2000,4 @@ SceneRoots:
   - {fileID: 6402461121304509856}
   - {fileID: 581483228}
   - {fileID: 616153662640349906}
+  - {fileID: 1401053714}

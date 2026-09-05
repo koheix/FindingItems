@@ -41,6 +41,8 @@ Assets/
 ├─ Scripts/                   # 自作スクリプト（C#）
 ├─ Settings/                  # URP 設定・ビルドプロファイル
 ├─ StarterAssets/             # Unity 公式のサードパーソンテンプレート（サードパーティ）
+├─ Tests/                     # 単体テスト
+│   └─ Editor/                # EditMode テストとテスト実行ユーティリティ
 ├─ TextMesh Pro/              # TMP のフォント・マテリアル
 └─ TutorialInfo/ Readme.asset # Unity テンプレートの残骸
 ```
@@ -61,6 +63,7 @@ Assets/
 | `RollerBallTrainingScripts/` | ML-Agents チュートリアル用 |
 | `StageGeneratorScripts/` | ステージ自動生成（`StageGenerator`） |
 | `TitleSceneScripts/` | タイトル画面・PlayFab（`PlayFabManager`） |
+| `TutorialScripts/` | チュートリアルの進行とメッセージ UI（`TutorialManager`） |
 | `TrainingScripts/` | ML-Agents・AI 挙動（`NaviAgent`, `SimulationPlayer`） |
 | `UtilScripts/` | 共通ユーティリティ・データクラス（`SaveData`） |
 
@@ -72,6 +75,7 @@ Assets/
 | 追加するもの | 置き場所 |
 | --- | --- |
 | 自作スクリプト | `Assets/Scripts/<機能>Scripts/` （該当がなければ新設し、この表に追記する） |
+| 単体テスト | `Assets/Tests/Editor/` （`<対象クラス>Tests.cs`。[docs/testing.md](testing.md) 参照） |
 | 自作プレハブ | `Assets/Prefabs/<カテゴリ>/` |
 | ステージシーン | `Assets/Scenes/` （Build Settings と `GameMaster.stageNames` にも登録） |
 | 動的ロードするアセット | `Assets/Resources/` （多用しない。基本は `[SerializeField]` で参照を渡す） |

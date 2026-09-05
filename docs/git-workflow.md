@@ -96,7 +96,20 @@ git add Assets/Scripts/Foo/Bar.cs Assets/Scripts/Foo/Bar.cs.meta
 git commit -m "feat: add bar system"
 ```
 
-### 3. push して PR を作成する
+### 3. 単体テストを実行する（必須）
+
+**PR を作る前に必ず実行します。** 手順とレポート形式は [docs/testing.md](testing.md) を参照。
+
+```
+Unity Editor: Tools > Tests > Run EditMode Tests
+Claude Code : mcp__UnityMCP__execute_code -> EditorTestReporter.RunEditModeTests();
+```
+
+`TestResults/edit-mode-report.md` が **PASSED** であることを確認し、その中身を PR 本文に貼ります。
+テスト未実行・失敗・古い場合、`gh pr create` は PreToolUse フック
+（`.claude/hooks/require-test-report.ps1`）が拒否します。
+
+### 4. push して PR を作成する
 
 ```bash
 git push -u origin feat/your-feature
@@ -125,13 +138,17 @@ gh auth login                    # 対話式。通常の PowerShell ウィンド
 `gh auth login` は対話プロンプトが出るため、Claude Code のセッション内からは実行できません。
 未認証の場合、Claude Code は `gh` を使わず compare URL を提示します。
 
-### 4. PR の内容
+### 5. PR の内容
 
 `.github/pull_request_template.md` のテンプレートに沿って、以下を必ず書きます。
 
 - 何を変えたか / なぜ変えたか
-- **Unity Editor での動作確認結果**（どのシーンで何を確認したか）
+- **単体テストの結果**（`TestResults/edit-mode-report.md` の中身をそのまま貼る）
+- **人間に確認してほしいこと**（自動テストで担保できない項目をチェックリストで）
 - スクリーンショット（見た目の変更がある場合）
+
+自動テストの結果と、人間に確認してほしいことは**分けて書きます**。混ぜると、
+どこまで機械的に保証されているのかがレビュー者に分からなくなるためです。
 
 ## Claude Code に許可している git 操作
 

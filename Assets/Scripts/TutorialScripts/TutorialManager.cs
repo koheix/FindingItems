@@ -17,6 +17,10 @@ using TMPro;
 ///   その後 WaitFor に指定した条件（被弾・アイテム取得）が満たされると次のメッセージへ進む。
 ///   PC ではゲーム中カーソルがロックされているため、表示中だけロックを解除して
 ///   マウスで OK を押せるようにし、閉じるときに元の状態へ戻す。
+///
+/// 【責務の分担】
+///   進行のルール（どのメッセージを出すか・いつ次へ進むか）は <see cref="TutorialProgress"/> が持ち、
+///   このクラスは UI の生成・時間停止・カーソル制御といった Unity 側の処理だけを担当する。
 /// </summary>
 public class TutorialManager : MonoBehaviour
 {
@@ -117,12 +121,9 @@ public class TutorialManager : MonoBehaviour
     private GameObject panelRoot;
     private TextMeshProUGUI messageText;
 
-    // 進行状態
-    private int stepIndex;
-    private bool isWaitingForTrigger; // メッセージを閉じて、次に進む条件を待っている間だけ true
+    // 進行状態（ロジック本体は TutorialProgress に持たせている）
+    private TutorialProgress progress;
     private int lastHealth;
-    private bool isFinished;
-    private bool isShowingMessage;
 
     // 表示前のカーソル状態（閉じるときに戻す）
     private bool isCursorOverridden;
@@ -165,7 +166,7 @@ public class TutorialManager : MonoBehaviour
     private void Update()
     {
         // Time.timeScale = 0 でも Update は回るので、ここで Enter を拾う
-        if (!isShowingMessage || !submitWithEnterKey)
+        if (!submitWithEnterKey || progress == null || !progress.IsShowingMessage)
             return;
 
         Keyboard keyboard = Keyboard.current;
@@ -185,71 +186,52 @@ public class TutorialManager : MonoBehaviour
             lastHealth = playerHealth.health;
         }
 
-        if (steps == null || steps.Length == 0)
+        progress = new TutorialProgress(steps);
+
+        if (!progress.Begin())
         {
             Debug.LogWarning("TutorialManager: steps が空のためチュートリアルを開始しません。");
-            isFinished = true;
             return;
         }
 
-        ShowStep(0);
+        ShowCurrentMessage();
     }
 
     // ─── 進行 ────────────────────────────────────────────
 
-    private void ShowStep(int index)
+    /// <summary>いまのステップのメッセージを表示し、ゲームを止める。</summary>
+    private void ShowCurrentMessage()
     {
-        stepIndex = index;
-        isWaitingForTrigger = false;
-        isShowingMessage = true;
-
-        messageText.text = steps[index].message;
+        messageText.text = progress.CurrentStep.message;
         panelRoot.SetActive(true);
 
         PauseGame();
         UnlockCursor();
     }
 
-    /// <summary>OK ボタンまたは Enter が押されたとき。ゲームを再開し、条件付きなら待機状態に入る。</summary>
+    /// <summary>メッセージを閉じ、ゲームとカーソルを元に戻す。</summary>
+    private void HideCurrentMessage()
+    {
+        HidePanel();
+        ResumeGame();
+        RestoreCursor();
+    }
+
+    /// <summary>OK ボタンまたは Enter が押されたとき。</summary>
     private void OnOkButtonPressed()
     {
-        HidePanel();
-        ResumeGame();
-        RestoreCursor();
+        if (progress == null || !progress.IsShowingMessage)
+            return;
 
-        if (steps[stepIndex].waitFor == TutorialTrigger.None)
+        if (progress.ConfirmCurrentStep())
         {
-            AdvanceToNextStep();
+            // 条件なしのステップだったので、続けて次のメッセージを出す
+            ShowCurrentMessage();
         }
         else
         {
-            // 条件が満たされるまでプレイヤーに操作させる
-            isWaitingForTrigger = true;
+            HideCurrentMessage();
         }
-    }
-
-    private void AdvanceToNextStep()
-    {
-        isWaitingForTrigger = false;
-
-        int nextIndex = stepIndex + 1;
-        if (nextIndex < steps.Length)
-        {
-            ShowStep(nextIndex);
-        }
-        else
-        {
-            Finish();
-        }
-    }
-
-    private void Finish()
-    {
-        isFinished = true;
-        isWaitingForTrigger = false;
-        HidePanel();
-        ResumeGame();
-        RestoreCursor();
     }
 
     // ─── 条件の判定 ──────────────────────────────────────
@@ -259,25 +241,24 @@ public class TutorialManager : MonoBehaviour
         int previous = lastHealth;
         lastHealth = current;
 
-        if (isFinished || !isWaitingForTrigger)
+        if (progress == null)
             return;
 
         // 体力が減っていたら被弾とみなす
-        if (steps[stepIndex].waitFor == TutorialTrigger.PlayerDamaged && current < previous)
+        if (current < previous && progress.NotifyPlayerDamaged())
         {
-            AdvanceToNextStep();
+            ShowCurrentMessage();
         }
     }
 
     private void HandleItemCollected(string itemName)
     {
-        if (isFinished || !isWaitingForTrigger)
+        if (progress == null)
             return;
 
-        TutorialStep step = steps[stepIndex];
-        if (step.waitFor == TutorialTrigger.ItemCollected && step.itemName == itemName)
+        if (progress.NotifyItemCollected(itemName))
         {
-            AdvanceToNextStep();
+            ShowCurrentMessage();
         }
     }
 
@@ -431,8 +412,6 @@ public class TutorialManager : MonoBehaviour
 
     private void HidePanel()
     {
-        isShowingMessage = false;
-
         if (panelRoot != null)
         {
             panelRoot.SetActive(false);

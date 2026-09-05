@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 
@@ -12,8 +13,10 @@ using TMPro;
 ///   3. Steps はインスペクターで編集できる（既定で Stage1_1 用の文言が入っている）
 ///
 /// 【挙動】
-///   メッセージ表示中は Time.timeScale = 0 でゲームを止め、OK ボタンで再開する。
+///   メッセージ表示中は Time.timeScale = 0 でゲームを止め、OK ボタン（またはキーボードの Enter）で再開する。
 ///   その後 WaitFor に指定した条件（被弾・アイテム取得）が満たされると次のメッセージへ進む。
+///   PC ではゲーム中カーソルがロックされているため、表示中だけロックを解除して
+///   マウスで OK を押せるようにし、閉じるときに元の状態へ戻す。
 /// </summary>
 public class TutorialManager : MonoBehaviour
 {
@@ -100,6 +103,16 @@ public class TutorialManager : MonoBehaviour
     [Tooltip("OK ボタンのラベル")]
     [SerializeField] private string okButtonLabel = "OK";
 
+    [Tooltip("OK ボタンの下に出す操作ヒント。空にすると表示しない")]
+    [SerializeField] private string hintLabel = "Enter キー / OK をタップで次へ";
+
+    [Header("操作")]
+    [Tooltip("キーボードの Enter でも OK と同じ動作をする")]
+    [SerializeField] private bool submitWithEnterKey = true;
+
+    [Tooltip("表示中だけマウスカーソルのロックを解除する（PC でクリックできるようにするため）")]
+    [SerializeField] private bool unlockCursorWhileShowing = true;
+
     // 実行時に生成する UI
     private GameObject panelRoot;
     private TextMeshProUGUI messageText;
@@ -109,6 +122,12 @@ public class TutorialManager : MonoBehaviour
     private bool isWaitingForTrigger; // メッセージを閉じて、次に進む条件を待っている間だけ true
     private int lastHealth;
     private bool isFinished;
+    private bool isShowingMessage;
+
+    // 表示前のカーソル状態（閉じるときに戻す）
+    private bool isCursorOverridden;
+    private CursorLockMode previousCursorLockState;
+    private bool previousCursorVisible;
 
     private void Awake()
     {
@@ -138,8 +157,25 @@ public class TutorialManager : MonoBehaviour
         }
         PlayerController.OnItemCollected -= HandleItemCollected;
 
-        // 表示途中でシーン遷移されても、時間が止まったままにならないようにする
+        // 表示途中でシーン遷移されても、時間やカーソルが止まったままにならないようにする
         ResumeGame();
+        RestoreCursor();
+    }
+
+    private void Update()
+    {
+        // Time.timeScale = 0 でも Update は回るので、ここで Enter を拾う
+        if (!isShowingMessage || !submitWithEnterKey)
+            return;
+
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard == null)
+            return;
+
+        if (keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame)
+        {
+            OnOkButtonPressed();
+        }
     }
 
     private void Start()
@@ -165,18 +201,21 @@ public class TutorialManager : MonoBehaviour
     {
         stepIndex = index;
         isWaitingForTrigger = false;
+        isShowingMessage = true;
 
         messageText.text = steps[index].message;
         panelRoot.SetActive(true);
 
         PauseGame();
+        UnlockCursor();
     }
 
-    /// <summary>OK ボタンが押されたとき。ゲームを再開し、条件付きなら待機状態に入る。</summary>
+    /// <summary>OK ボタンまたは Enter が押されたとき。ゲームを再開し、条件付きなら待機状態に入る。</summary>
     private void OnOkButtonPressed()
     {
         HidePanel();
         ResumeGame();
+        RestoreCursor();
 
         if (steps[stepIndex].waitFor == TutorialTrigger.None)
         {
@@ -210,6 +249,7 @@ public class TutorialManager : MonoBehaviour
         isWaitingForTrigger = false;
         HidePanel();
         ResumeGame();
+        RestoreCursor();
     }
 
     // ─── 条件の判定 ──────────────────────────────────────
@@ -259,6 +299,33 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
+    // ─── カーソル ────────────────────────────────────────
+    // ゲーム中は PlayerController がカーソルをロックして非表示にしているため、
+    // そのままだと PC で OK ボタンをクリックできない。表示中だけ解除する。
+
+    private void UnlockCursor()
+    {
+        if (!unlockCursorWhileShowing || isCursorOverridden)
+            return;
+
+        previousCursorLockState = Cursor.lockState;
+        previousCursorVisible = Cursor.visible;
+        isCursorOverridden = true;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    private void RestoreCursor()
+    {
+        if (!isCursorOverridden)
+            return;
+
+        Cursor.lockState = previousCursorLockState;
+        Cursor.visible = previousCursorVisible;
+        isCursorOverridden = false;
+    }
+
     // ─── UI の組み立て ───────────────────────────────────
     // シーン側に UI を用意しなくても動くように、実行時にコードで生成する。
 
@@ -293,7 +360,7 @@ public class TutorialManager : MonoBehaviour
         boxRect.anchorMin = new Vector2(0.5f, 0.5f);
         boxRect.anchorMax = new Vector2(0.5f, 0.5f);
         boxRect.pivot = new Vector2(0.5f, 0.5f);
-        boxRect.sizeDelta = new Vector2(1100f, 420f);
+        boxRect.sizeDelta = new Vector2(1100f, 480f);
         boxRect.anchoredPosition = Vector2.zero;
 
         // メッセージ本文
@@ -310,7 +377,7 @@ public class TutorialManager : MonoBehaviour
         RectTransform textRect = messageText.rectTransform;
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
-        textRect.offsetMin = new Vector2(60f, 140f);  // 下側は OK ボタンの分だけ空ける
+        textRect.offsetMin = new Vector2(60f, 196f);  // 下側は OK ボタンとヒントの分だけ空ける
         textRect.offsetMax = new Vector2(-60f, -50f);
 
         // OK ボタン
@@ -322,7 +389,7 @@ public class TutorialManager : MonoBehaviour
         buttonRect.anchorMax = new Vector2(0.5f, 0f);
         buttonRect.pivot = new Vector2(0.5f, 0f);
         buttonRect.sizeDelta = new Vector2(320f, 96f);
-        buttonRect.anchoredPosition = new Vector2(0f, 30f);
+        buttonRect.anchoredPosition = new Vector2(0f, 44f);
 
         Button okButton = buttonObject.AddComponent<Button>();
         okButton.targetGraphic = buttonImage;
@@ -339,10 +406,33 @@ public class TutorialManager : MonoBehaviour
             buttonLabel.font = fontAsset;
         }
         Stretch(buttonLabel.rectTransform);
+
+        // 操作ヒント（OK ボタンのすぐ上）
+        if (!string.IsNullOrEmpty(hintLabel))
+        {
+            GameObject hintObject = CreateUIObject("HintText", box.transform);
+            TextMeshProUGUI hintText = hintObject.AddComponent<TextMeshProUGUI>();
+            hintText.text = hintLabel;
+            hintText.alignment = TextAlignmentOptions.Center;
+            hintText.fontSize = 28f;
+            hintText.color = new Color(1f, 1f, 1f, 0.7f);
+            if (fontAsset != null)
+            {
+                hintText.font = fontAsset;
+            }
+            RectTransform hintRect = hintText.rectTransform;
+            hintRect.anchorMin = new Vector2(0f, 0f);
+            hintRect.anchorMax = new Vector2(1f, 0f);
+            hintRect.pivot = new Vector2(0.5f, 0f);
+            hintRect.sizeDelta = new Vector2(-120f, 36f);
+            hintRect.anchoredPosition = new Vector2(0f, 150f);
+        }
     }
 
     private void HidePanel()
     {
+        isShowingMessage = false;
+
         if (panelRoot != null)
         {
             panelRoot.SetActive(false);

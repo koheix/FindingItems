@@ -75,3 +75,10 @@ crashlytics-build.properties
 # *.asset
 Assets/TextMesh Pro/Resources/Fonts & Materials/NotoSansJP-Regular SDF.asset
 Assets/TextMesh Pro/Resources/Fonts & Materials/NotoSansJP-Regular SDF.asset.meta
+
+# Claude Code の個人設定（権限の上書きなど）
+.claude/settings.local.json
+.claude/*.local.json
+
+# 旧 Claude Code 用ファイル（CLAUDE.md に統合済み）
+.claudecode.md

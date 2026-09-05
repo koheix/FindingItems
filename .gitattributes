@@ -1,0 +1,44 @@
+# ── Unity の YAML アセット ───────────────────────────────
+# テキスト(YAML)だが手動マージは危険。UnityYAMLMerge (SmartMerge) に任せる。
+# 使用には各自で一度 git config が必要（docs/git-workflow.md を参照）。
+*.unity          merge=unityyamlmerge
+*.prefab         merge=unityyamlmerge
+*.asset          merge=unityyamlmerge
+*.mat            merge=unityyamlmerge
+*.anim           merge=unityyamlmerge
+*.controller     merge=unityyamlmerge
+*.overrideController merge=unityyamlmerge
+*.physicMaterial merge=unityyamlmerge
+*.meta           merge=unityyamlmerge
+
+# ── ソースの差分表示 ─────────────────────────────────────
+*.cs diff=csharp
+
+# ── バイナリ（差分を取らない・マージしない）──────────────
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.psd   binary
+*.tga   binary
+*.tif   binary
+*.exr   binary
+*.hdr   binary
+*.cubemap binary
+*.fbx   binary
+*.obj   binary
+*.blend binary
+*.ttf   binary
+*.otf   binary
+*.wav   binary
+*.mp3   binary
+*.ogg   binary
+*.mp4   binary
+*.dll   binary
+*.so    binary
+*.a     binary
+*.bytes binary
+*.unitypackage binary
+
+# 注: 既存ファイルの改行コードは意図的に変更していません
+# （`* text=auto` を入れると既存の .cs 全体に差分が出るため）。

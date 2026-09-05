@@ -117,6 +117,9 @@ public class TutorialManager : MonoBehaviour
     [Tooltip("表示中だけマウスカーソルのロックを解除する（PC でクリックできるようにするため）")]
     [SerializeField] private bool unlockCursorWhileShowing = true;
 
+    [Tooltip("メッセージを閉じたあとに戻すカーソル状態。ゲーム中は PlayerController が Locked にしている")]
+    [SerializeField] private CursorLockMode cursorLockStateWhilePlaying = CursorLockMode.Locked;
+
     // 実行時に生成する UI
     private GameObject panelRoot;
     private TextMeshProUGUI messageText;
@@ -125,10 +128,8 @@ public class TutorialManager : MonoBehaviour
     private TutorialProgress progress;
     private int lastHealth;
 
-    // 表示前のカーソル状態（閉じるときに戻す）
+    // カーソルのロックを解除中かどうか
     private bool isCursorOverridden;
-    private CursorLockMode previousCursorLockState;
-    private bool previousCursorVisible;
 
     private void Awake()
     {
@@ -165,8 +166,13 @@ public class TutorialManager : MonoBehaviour
 
     private void Update()
     {
-        // Time.timeScale = 0 でも Update は回るので、ここで Enter を拾う
-        if (!submitWithEnterKey || progress == null || !progress.IsShowingMessage)
+        // Time.timeScale = 0 でも Update は回る
+        if (progress == null || !progress.IsShowingMessage)
+            return;
+
+        KeepCursorUnlocked();
+
+        if (!submitWithEnterKey)
             return;
 
         Keyboard keyboard = Keyboard.current;
@@ -286,15 +292,29 @@ public class TutorialManager : MonoBehaviour
 
     private void UnlockCursor()
     {
-        if (!unlockCursorWhileShowing || isCursorOverridden)
+        if (!unlockCursorWhileShowing)
             return;
 
-        previousCursorLockState = Cursor.lockState;
-        previousCursorVisible = Cursor.visible;
         isCursorOverridden = true;
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    /// <summary>
+    /// 表示中は毎フレームロック解除を上書きする。
+    /// 一度解除するだけでは、ウィンドウのフォーカスが戻ったときに Unity が
+    /// PlayerController の要求したロックを適用し直してしまい、OK をクリックできなくなる。
+    /// </summary>
+    private void KeepCursorUnlocked()
+    {
+        if (!unlockCursorWhileShowing)
+            return;
+
+        if (Cursor.lockState != CursorLockMode.None || !Cursor.visible)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     private void RestoreCursor()
@@ -302,8 +322,8 @@ public class TutorialManager : MonoBehaviour
         if (!isCursorOverridden)
             return;
 
-        Cursor.lockState = previousCursorLockState;
-        Cursor.visible = previousCursorVisible;
+        Cursor.lockState = cursorLockStateWhilePlaying;
+        Cursor.visible = cursorLockStateWhilePlaying == CursorLockMode.None;
         isCursorOverridden = false;
     }
 

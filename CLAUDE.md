@@ -22,14 +22,18 @@
 | [docs/unity-project-structure.md](docs/unity-project-structure.md) | `Assets/` 以下のディレクトリ構成と配置ルール |
 | [docs/architecture.md](docs/architecture.md) | 主要システム（進行管理・プレイヤー・アイテム・セーブ）の設計 |
 | [docs/coding-guidelines.md](docs/coding-guidelines.md) | C# / Unity のコーディング規約 |
+| [docs/testing.md](docs/testing.md) | テスト方針・単体テストの書き方と実行手順・結果の出力 |
 | [docs/git-workflow.md](docs/git-workflow.md) | ブランチ戦略・コミット規約・PR 手順 |
 
 ## 作業の基本ルール
 
 1. **ブランチ**: `main` および `devel` に直接コミットしない。必ず作業ブランチを切り、PR を作成する。詳細は [docs/git-workflow.md](docs/git-workflow.md)。
-2. **配置**: 新規ファイルは [docs/unity-project-structure.md](docs/unity-project-structure.md) の構成に従って置く。既存フォルダに該当するものがあれば新設しない。
-3. **既存コードに合わせる**: 命名・コメント量・書き方は周囲のコードに合わせる。大規模なリファクタリングは依頼されたときだけ行う。
-4. **コメント言語**: コード内のコメント・XML ドキュメントコメントは**日本語**。識別子（クラス名・変数名）は英語。
+2. **テスト**: **PR を作る前に必ず単体テストを実行し、結果を PR に貼る。** 手順は `unity-test` スキル
+   （`.claude/skills/unity-test/SKILL.md`）と [docs/testing.md](docs/testing.md) にある。
+   テスト未実行の `gh pr create` は PreToolUse フックが拒否する。拒否されたら回避せずテストを実行すること。
+3. **配置**: 新規ファイルは [docs/unity-project-structure.md](docs/unity-project-structure.md) の構成に従って置く。既存フォルダに該当するものがあれば新設しない。
+4. **既存コードに合わせる**: 命名・コメント量・書き方は周囲のコードに合わせる。大規模なリファクタリングは依頼されたときだけ行う。
+5. **コメント言語**: コード内のコメント・XML ドキュメントコメントは**日本語**。識別子（クラス名・変数名）は英語。
 
 ## Unity 固有の注意（重要）
 
@@ -56,4 +60,11 @@
 ## よく使うカスタムコマンド
 
 - `/commit` — 変更内容を確認し、Conventional Commits 形式でコミットする
-- `/pr` — 現在のブランチを push して PR を作成する（または PR 作成 URL を提示する）
+- `/pr` — 単体テストを実行してから push し、PR を作成する（または PR 作成 URL を提示する）
+
+## スキルとフック
+
+| 種類 | 場所 | 役割 |
+| --- | --- | --- |
+| スキル `unity-test` | `.claude/skills/unity-test/SKILL.md` | 単体テストの実行手順とレポート形式 |
+| PreToolUse フック | `.claude/hooks/require-test-report.ps1` | テスト未実行・失敗・古い場合に `gh pr create` を拒否する |

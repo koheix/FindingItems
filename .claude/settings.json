@@ -59,5 +59,18 @@
       "Read(Library/**)",
       "Read(Temp/**)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/require-test-report.ps1"
+          }
+        ]
+      }
+    ]
   }
 }

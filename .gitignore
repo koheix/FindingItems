@@ -82,3 +82,6 @@ Assets/TextMesh Pro/Resources/Fonts & Materials/NotoSansJP-Regular SDF.asset.met
 
 # 旧 Claude Code 用ファイル（CLAUDE.md に統合済み）
 .claudecode.md
+
+# テスト結果レポート（EditorTestReporter が生成する。PR 本文に貼るのでコミットはしない）
+/TestResults/

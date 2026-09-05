@@ -102,24 +102,28 @@ git commit -m "feat: add bar system"
 git push -u origin feat/your-feature
 ```
 
-**GitHub CLI (`gh`) が入っている場合:**
+GitHub CLI (`gh`) を使います。**ベースブランチは必ず `devel`**（`gh` の既定はリポジトリの
+デフォルトブランチなので、`--base` の指定を省略しないこと）。
 
 ```bash
-gh pr create --base devel --title "feat: add bar system" --body-file .github/pull_request_template.md
+gh pr create --base devel --title "feat: add bar system" --body-file <本文のファイル>
 ```
 
-**入っていない場合**（現状のこの環境）: push 後に表示される URL、または以下を開いて作成します。
+`gh` が使えない環境では、以下の URL をブラウザで開いて作成します。
 
 ```
 https://github.com/koheix/FindingItems/compare/devel...<ブランチ名>?expand=1
 ```
 
-`gh` を入れると Claude Code から PR 作成まで完結できます:
+#### セットアップ（初回のみ）
 
 ```powershell
-winget install --id GitHub.cli
-gh auth login
+winget install --id GitHub.cli   # インストール済み: v2.100.0
+gh auth login                    # 対話式。通常の PowerShell ウィンドウで実行する
 ```
+
+`gh auth login` は対話プロンプトが出るため、Claude Code のセッション内からは実行できません。
+未認証の場合、Claude Code は `gh` を使わず compare URL を提示します。
 
 ### 4. PR の内容
 

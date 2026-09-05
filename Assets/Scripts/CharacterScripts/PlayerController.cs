@@ -473,13 +473,22 @@ public class PlayerController : MonoBehaviour
         );
     }
 
+    /// <summary>
+    /// アイテムを取得したときに発火する。引数は CollectibleItem.GetItemName() の戻り値。
+    /// static なので、購読側は必ず OnDisable で解除すること。
+    /// </summary>
+    public static event System.Action<string> OnItemCollected;
+
     // 収集アイテムとの衝突判定
     private void OnTriggerEnter(Collider other)
     {
         CollectibleItem collectible = other.GetComponent<CollectibleItem>();
         if(collectible != null)
         {
+            // OnCollect でアイテムが Destroy されるため、名前を先に取得しておく
+            string itemName = collectible.GetItemName();
             collectible.OnCollect(gameObject);
+            OnItemCollected?.Invoke(itemName);
         }
     }
 

@@ -61,6 +61,7 @@ Assets/
 | `RollerBallTrainingScripts/` | ML-Agents チュートリアル用 |
 | `StageGeneratorScripts/` | ステージ自動生成（`StageGenerator`） |
 | `TitleSceneScripts/` | タイトル画面・PlayFab（`PlayFabManager`） |
+| `TutorialScripts/` | チュートリアルの進行とメッセージ UI（`TutorialManager`） |
 | `TrainingScripts/` | ML-Agents・AI 挙動（`NaviAgent`, `SimulationPlayer`） |
 | `UtilScripts/` | 共通ユーティリティ・データクラス（`SaveData`） |
 
